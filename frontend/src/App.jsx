@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-const GOOGLE_CLIENT_ID = import.meta.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID;
 
 export default function App(){
   const [user, setUser] = useState(null);
@@ -38,6 +38,8 @@ export default function App(){
     if(user || loading) return; //don't bother rendering the button yet
     function renderGoogleButton(){
       /* global google */
+      console.log(GOOGLE_CLIENT_ID);
+      
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleresponse,
