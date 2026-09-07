@@ -17,7 +17,7 @@ export default function App(){
       return;
     }
 
-    fetch(`${API_URL}/me`,{
+    fetch(`${API_URL}/api/auth/me`,{
       headers:{Authorization: `Bearer ${token}`},
     })
     .then((res)=>{
@@ -66,7 +66,7 @@ export default function App(){
   async function handleGoogleresponse(response) {
     setError('');
     try{
-      const res = await fetch(`${API_URL}/google`,{
+      const res = await fetch(`${API_URL}/api/auth/google`,{
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({credential:response.credential}),
