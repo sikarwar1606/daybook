@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import Home from './Home.jsx'
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID;
@@ -37,9 +38,7 @@ export default function App(){
   useEffect(()=>{
     if(user || loading) return; //don't bother rendering the button yet
     function renderGoogleButton(){
-      /* global google */
-      console.log(GOOGLE_CLIENT_ID);
-      
+      /* global google */      
       google.accounts.id.initialize({
         client_id: GOOGLE_CLIENT_ID,
         callback: handleGoogleresponse,
@@ -94,14 +93,17 @@ export default function App(){
   // -----DASHBOARD (Protected view)-------------
   if (user) {
     return (
-      <div style={styles.container}>
-        {user.avatarUrl && (
-          <img src={user.avatarUrl} alt="avatar" style={styles.avatar} />
-        )}
-        <h2>Welcome, {user.username}</h2>
-        <p>{user.email}</p>
-        <button style={styles.button} onClick={handleLogout}>Logout</button>
-      </div>
+      <>
+          <Home user={user}  />
+      </>
+      // <div style={styles.container}>
+      //   {user.avatarUrl && (
+      //     <img src={user.avatarUrl} alt="avatar" style={styles.avatar} />
+      //   )}
+      //   <h2>Welcome, {user.username}</h2>
+      //   <p>{user.email}</p>
+      //   <button style={styles.button} onClick={handleLogout}>Logout</button>
+      // </div>
     );
   }
  // ---------- LOGGED OUT VIEW ----------
