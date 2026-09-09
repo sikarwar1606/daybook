@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { CircleUser } from "lucide-react";
+import './Home.css';
 import NetWorth from "./component/Networth.jsx"
 import AssetsOverview from "./component/AssetsOverview.jsx"
 import Liabilities from "./component/Liabilities.jsx"
@@ -11,15 +12,11 @@ import MultiJar from "./component/MultiJar.jsx"
 
 // --- [FUTURE: components/Header.jsx] ---
 const Header = () => (
-  <header className="bg-[#156082] text-white p-4 flex  rounded-b-xl shadow-md h-35">
-    <div className="flex gap-60 ">
-      <h3 className="text-lg font-bold">Daybook</h3>
-      <p></p>
-      <CircleUser />
-    </div>
+  <header className="bg-[#156082] text-white px-4 py-3 sm:px-6 flex items-center justify-between rounded-b-xl shadow-md">
+    <h3 className="text-lg font-bold tracking-tight">Daybook</h3>
+    <CircleUser />
   </header>
-);
-
+);   
 // --- Usage in Home.jsx ---
 const goals = [
   { id: 1, name: 'Emergency Fund', target: 100000, risk: 'low', color: '#156082' },
@@ -34,18 +31,16 @@ const goals = [
 const Home = () => {
   const [totalSaved, setTotalSaved] = useState(140000);
   return (
-    <>
+    <main className="home-page">
       <Header />
       <NetWorth />
-      {/* <SavingsJar/> */}
-      <MultiJar totalSaved={totalSaved} goals={goals} />   
+      <MultiJar totalSaved={totalSaved} goals={goals} />
       <AssetsOverview />
       <Liabilities />
       <LearningPaths />
       <ActiveIncome />
-      
-    </>
+    </main>
   );
-};
+};   
 
 export default Home;
