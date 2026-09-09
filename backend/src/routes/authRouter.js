@@ -50,7 +50,7 @@ router.post('/google', async (req, res) => {
     }
 
     // ---- issue OUR OWN session token (don't reuse Google's token) ----
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '365d' });
 
     res.json({
       user: { id: user.id, username: user.username, email: user.email, avatarUrl: user.avatar_url },
