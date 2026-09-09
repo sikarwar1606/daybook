@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import Home from './Home.jsx'
+import Home from './component/Home/Home.jsx'
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID;
@@ -9,6 +9,24 @@ export default function App(){
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const buttonRef = useRef(null);
+
+  async function handleGoogleresponse(response) {
+    setError('');
+    try{
+      const res = await fetch(`${API_URL}/api/auth/google`,{
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({credential:response.credential}),
+      })
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Google sign-in failed');
+
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+    }catch(err){
+      setError(err.message);
+    }
+  }
 
   //-----On first load: check if we already have a valid session--------
   useEffect(()=>{
@@ -62,23 +80,7 @@ export default function App(){
   },[user, loading]);
 
   //----Called by Google after the user picks an account ----
-  async function handleGoogleresponse(response) {
-    setError('');
-    try{
-      const res = await fetch(`${API_URL}/api/auth/google`,{
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({credential:response.credential}),
-      })
-      const data = await res.json();
-      if(!res.ok) throw new Error(data.error || 'Google sign-in failed');
-
-      localStorage.setItem('token', data.token);
-      setUser(data.user);
-    }catch(err){
-      setError(err.message);
-    }
-  }
+  
 
   function handleLogout(){
     localStorage.removeItem('token');
@@ -94,26 +96,47 @@ export default function App(){
   if (user) {
     return (
       <>
-          <Home user={user}  />
+          <Home user={user} handleLogout={handleLogout}  />
       </>
-      // <div style={styles.container}>
-      //   {user.avatarUrl && (
-      //     <img src={user.avatarUrl} alt="avatar" style={styles.avatar} />
-      //   )}
-      //   <h2>Welcome, {user.username}</h2>
-      //   <p>{user.email}</p>
-      //   <button style={styles.button} onClick={handleLogout}>Logout</button>
-      // </div>
     );
   }
  // ---------- LOGGED OUT VIEW ----------
+  // return (
+  //   <div style={styles.container}>
+  //     <h2>Sign in</h2>
+  //     <div ref={buttonRef}></div>
+  //     {error && <p style={{ color: 'red' }}>{error}</p>}
+  //   </div>
+  // );
+
   return (
-    <div style={styles.container}>
-      <h2>Sign in</h2>
-      <div ref={buttonRef}></div>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#156082] to-[#0d3b52] px-4">
+    <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-8 text-center">
+      {/* Logo */}
+      <div className="w-14 h-14 rounded-2xl bg-[#156082] flex items-center justify-center mx-auto mb-4">
+        <span className="text-white text-2xl font-bold">D</span>
+      </div>
+
+      <h2 className="text-2xl font-bold text-gray-900">Daybook</h2>
+      <p className="text-sm text-gray-500 mt-1 mb-6">Sign in to manage your funds</p>
+
+      {/* Google button */}
+      <div ref={buttonRef} className="flex justify-center" />
+
+      {/* Error */}
+      {error && (
+        <div className="mt-4 px-3 py-2 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-xs text-red-600">{error}</p>
+        </div>
+      )}
+
+      {/* Footer */}
+      <p className="mt-6 text-[11px] text-gray-400">
+        By continuing, you agree to our Terms & Privacy Policy
+      </p>
     </div>
-  );
+  </div>
+);   
 
 }
 
