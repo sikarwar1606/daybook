@@ -100,14 +100,7 @@ export default function App(){
       </>
     );
   }
- // ---------- LOGGED OUT VIEW ----------
-  // return (
-  //   <div style={styles.container}>
-  //     <h2>Sign in</h2>
-  //     <div ref={buttonRef}></div>
-  //     {error && <p style={{ color: 'red' }}>{error}</p>}
-  //   </div>
-  // );
+
 
   return (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#156082] to-[#0d3b52] px-4">
