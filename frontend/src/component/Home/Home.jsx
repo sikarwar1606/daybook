@@ -46,7 +46,7 @@ const Home = ({user, handleLogout}) => {
 
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       {currentPage === "home" && (<MultiJar totalSaved={totalSaved} goals={goals} /> )}
-      {currentPage === "addTransaction" && <AddTransaction />}
+      {currentPage === "addTransaction" && <AddTransaction user={user}/>}
       {currentPage === "trending" && <Trending />}
     </main>
   );
