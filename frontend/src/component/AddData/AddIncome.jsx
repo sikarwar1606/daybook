@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import './AddIncome.css'
 
 const AddIncome = ({ onBack, user }) => {
-  const API_URL = "http://localhost:3000";
+  const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [loading, setLoading] = useState(true);
