@@ -1,93 +1,160 @@
-import React,{useState} from "react"
+import { useState, useEffect } from "react";
+import './AddIncome.css'
 
-const AddIncome = ({onBack, user})=>{
-    const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-    const [income, setIncome] = useState(["", "", ""]);
+const AddIncome = ({ onBack, user }) => {
+  const API_URL = "http://localhost:3000";
+  const [categories, setCategories] = useState([]);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const handleIncomeChange = (index, value) => {
-    const updated = [...income];
-    updated[index] = value;
-    setIncome(updated);
+  // Load categories + amounts on mount
+  useEffect(() => {
+    const fetchIncome = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/income/${user.user_id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data.income); // [{category_id, name, amount}]
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchIncome();
+  }, [user.user_id]);
+
+  const handleIncomeChange = (category_id, value) => {
+    setCategories((prev) =>
+      prev.map((c) =>
+        c.category_id === category_id ? { ...c, amount: value } : c,
+      ),
+    );
   };
 
-  const handleSave = async ()=>{
-    try{
-        const res = await fetch(`API_URL/api/income`,{
-            methord: "POST",
-            headers: {"Content-Type":'application/json'},
-            body: JSON.stringify({
-                user_id: user.user.user_id,
-                income:income
-            })
-        });
-        
-        if(res.ok){
-            console.log(res)
-            onBack(); //go back after saving 
-        }else{
-            alert("Failed to save income");
-        }
-    }catch(err){
-        console.error(err);
-        alert("Network error")
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) return;
+    try {
+      const res = await fetch(`${API_URL}/api/income/category`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.user_id,
+          name: newCategoryName.trim(),
+        }),
+      });
+      if (res.ok) {
+        const newCategory = await res.json();
+        setCategories((prev) => [...prev, { ...newCategory, amount: "" }]);
+        setNewCategoryName("");
+      } else {
+        alert("Failed to add category");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error");
     }
-  }
+  };
 
-    return (
-       
+  const handleDeleteCategory = async (category_id) => {
+    try {
+      const res = await fetch(`${API_URL}/api/income/category/${category_id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setCategories((prev) =>
+          prev.filter((c) => c.category_id !== category_id),
+        );
+      } else {
+        alert("Failed to delete category");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error");
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/income`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.user_id,
+          income: categories.map((c) => ({
+            category_id: c.category_id,
+            amount: c.amount,
+          })),
+        }),
+      });
+      if (res.ok) {
+        onBack();
+      } else {
+        alert("Failed to save income");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error");
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+
+  return (
     <div className="add-transaction">
       {/* Monthly Income Section */}
       <section className="section">
         <h2 className="section-title income-title">Monthly Income</h2>
 
-        <div className="field">
-          <label>Salary</label>
-          <input
-            type="number"
-            placeholder="0"
-            value={income[0]}
-            onChange={(e) => handleIncomeChange(0, e.target.value)}
-          />
-        </div>
+        {categories.map((cat) => (
+          <div className="field" key={cat.category_id}>
+            <label>{cat.name}</label>
+            <input
+              type="number"
+              placeholder="0"
+              value={cat.amount}
+              onChange={(e) =>
+                handleIncomeChange(cat.category_id, e.target.value)
+              }
+            />
+            <button
+              className="delete-btn"
+              onClick={() => handleDeleteCategory(cat.category_id)}
+            >
+              🗑️
+            </button>
+          </div>
+        ))}
 
+        {/* Add new category */}
         <div className="field">
-          <label>Bond</label>
           <input
-            type="number"
-            placeholder="0"
-            value={income[1]}
-            onChange={(e) => handleIncomeChange(1, e.target.value)}
+            type="text"
+            placeholder="New category name"
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
           />
-        </div>
-
-        <div className="field">
-          <label>Rental Income</label>
-          <input
-            type="number"
-            placeholder="0"
-            value={income[2]}
-            onChange={(e) => handleIncomeChange(2, e.target.value)}
-          />
-        </div>
-
-        <div className="field">
-          <label>Others</label>
-          <input
-            type="number"
-            placeholder="0"
-            value={income[3]}
-            onChange={(e) => handleIncomeChange(3, e.target.value)}
-          />
+          <button className="submit-btn" onClick={handleAddCategory}>
+            + Add
+          </button>
         </div>
       </section>
 
       <hr className="divider" />
 
-
-      <button className="submit-btn" onClick={handleSave}>Save</button>
-      <button className="submit-btn" onClick={onBack}>Back</button>
+      <div className="button-row">
+        <button className="submit-btn" onClick={handleSave}>
+          Save
+        </button>
+        <button className="submit-btn" onClick={onBack}>
+          Back
+        </button>
+      </div>
+      {/* <button className="submit-btn" onClick={handleSave}>Save</button>
+            <button className="submit-btn" onClick={onBack}>Back</button> */}
     </div>
   );
-}
+};
 
-export default AddIncome
+export default AddIncome;

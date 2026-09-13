@@ -50,10 +50,10 @@ router.post('/google', async (req, res) => {
     }
 
     // ---- issue OUR OWN session token (don't reuse Google's token) ----
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '365d' });
+    const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '365d' });
 
     res.json({
-      user: { id: user.id, username: user.username, email: user.email, avatarUrl: user.avatar_url },
+      user: { id: user.user_id, username: user.username, email: user.email, avatarUrl: user.avatar_url },
       token,
     });
   } catch (err) {
@@ -66,7 +66,7 @@ router.post('/google', async (req, res) => {
 router.get('/me', authMiddleware, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT id, username, email, avatar_url, created_at FROM users WHERE id = $1',
+      'SELECT user_id, username, email, avatar_url, created_at FROM users WHERE user_id = $1',
       [req.userId]
     );
 
