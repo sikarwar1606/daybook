@@ -7,6 +7,7 @@ import MultiJar from "./MultiJar.jsx";
 import Trending from "../AddData/Trending.jsx"
 import Navbar from "../Navbar.jsx"
 import Header from "./Header.jsx";
+import Summary from "./Summary.jsx";
 
 // --- Usage in Home.jsx ---
 const goals = [
@@ -42,6 +43,8 @@ const Home = ({user, handleLogout}) => {
   return (
     <main className="home-page">
       <Header user={user} handleLogout={handleLogout} />
+      <Summary user={user} />
+      
       {/* <NetWorth /> */}
 
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />

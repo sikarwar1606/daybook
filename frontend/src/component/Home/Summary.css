@@ -1,0 +1,90 @@
+.summary {
+  --ink: #14231F;
+  --paper: #FAF8F4;
+  --accent: #2F6F5E;
+  --muted: #8A8F87;
+  --line: #E4E0D6;
+  --danger: #B3503E;
+
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+}
+
+.summary-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.summary-value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-value.income {
+  color: var(--accent);
+}
+
+.summary-value.expense {
+  color: var(--danger);
+}
+
+.summary-divider {
+  border-top: 1px solid var(--line);
+  margin: 4px 0;
+}
+
+.balance-row .summary-label {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.summary-value.balance {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.summary-value.balance.negative {
+  color: var(--danger);
+}
+
+/* Loading skeleton */
+.summary.skeleton {
+  height: 110px;
+  background: linear-gradient(90deg, var(--paper) 25%, #efece5 37%, var(--paper) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary.skeleton {
+    animation: none;
+  }
+}
+
+/* Slightly larger on bigger screens, but stays small overall */
+@media (min-width: 768px) {
+  .summary {
+    max-width: 340px;
+    padding: 16px 18px;
+  }
+}
