@@ -16,7 +16,7 @@ const AddTransaction = ({user}) => {
       {showIncome ? (
         <AddIncome onBack={() => setShowIncome(false)} user={user} />
       ) : showExpence ? (
-        <AddExpences onBack={() => setShowExpence(false)} />
+        <AddExpences onBack={() => setShowExpence(false)} user={user}/>
       ) : (
         <div className="flex flex-col sm:flex-row gap-6 w-full max-w-md">
           <button

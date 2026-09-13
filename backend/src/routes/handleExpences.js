@@ -51,6 +51,7 @@ router.post('/expences', async(req, res)=>{
             )
         )   
         const results = await Promise.all(insertPromises);
+        console.log(results)
         res.status(200).json(results.map(r=>r.rows[0]));
     }catch(err){
         console.error(err);
@@ -76,7 +77,7 @@ router.get('/expences/:user_id', async(req,res)=>{
             [user_id]
         );
 
-        res.status(200).json({income:result.rows})
+        res.status(200).json({expences:result.rows})
     }catch(err){
         console.error(err)
         res.status(500).json({error:"Failed to fetch income"});

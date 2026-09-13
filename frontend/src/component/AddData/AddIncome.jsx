@@ -7,6 +7,8 @@ const AddIncome = ({ onBack, user }) => {
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [loading, setLoading] = useState(true);
+    const [isSaving, SetisSaving] = useState(false);
+  const [isAdding, SetisAdding] = useState(false);
 
   // Load categories + amounts on mount
   useEffect(() => {
@@ -36,6 +38,7 @@ const AddIncome = ({ onBack, user }) => {
 
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) return;
+    SetisAdding(true)
     try {
       const res = await fetch(`${API_URL}/api/income/category`, {
         method: "POST",
@@ -55,6 +58,8 @@ const AddIncome = ({ onBack, user }) => {
     } catch (err) {
       console.error(err);
       alert("Network error");
+    }finally{
+      SetisSaving(false);
     }
   };
 
@@ -77,6 +82,7 @@ const AddIncome = ({ onBack, user }) => {
   };
 
   const handleSave = async () => {
+    SetisSaving(true)
     try {
       const res = await fetch(`${API_URL}/api/income`, {
         method: "POST",
@@ -97,6 +103,8 @@ const AddIncome = ({ onBack, user }) => {
     } catch (err) {
       console.error(err);
       alert("Network error");
+    }finally{
+      SetisSaving(false);
     }
   };
 
@@ -137,8 +145,8 @@ const AddIncome = ({ onBack, user }) => {
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
           />
-          <button className="submit-btn" onClick={handleAddCategory}>
-            + Add
+          <button className="submit-btn" onClick={handleAddCategory} disabled={isAdding}>
+            {isAdding ? <span className="spinner" /> : "+Add"}
           </button>
         </div>
       </section>
@@ -146,11 +154,11 @@ const AddIncome = ({ onBack, user }) => {
       <hr className="divider" />
 
       <div className="button-row">
-        <button className="submit-btn" onClick={handleSave}>
-          Save
+        <button className="submit-btn" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? <span className="spinner"/> : "Save"}
         </button>
-        <button className="submit-btn" onClick={onBack}>
-          Back
+        <button className="submit-btn" onClick={onBack} disbaled={isSaving}>
+          {isSaving ? <span className="spinner"/> : "Back"}
         </button>
       </div>
     </div>
