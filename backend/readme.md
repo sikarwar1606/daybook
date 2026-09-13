@@ -23,3 +23,20 @@ CREATE TABLE monthly_income (
     amount NUMERIC(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+
+CREATE TABLE expences_categories (
+    category_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id),
+    name TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE (user_id, name)  -- prevents duplicate category names per user
+);
+
+CREATE TABLE monthly_expences (
+    expences_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id),
+    category_id INTEGER NOT NULL REFERENCES expences_categories(category_id) ON DELETE CASCADE,
+    amount NUMERIC(10,2) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);

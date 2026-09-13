@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Trash } from 'lucide-react';
 import './AddIncome.css'
 
 const AddIncome = ({ onBack, user }) => {
@@ -122,8 +123,9 @@ const AddIncome = ({ onBack, user }) => {
               className="delete-btn"
               onClick={() => handleDeleteCategory(cat.category_id)}
             >
-              🗑️
+              <Trash />
             </button>
+            
           </div>
         ))}
 
@@ -151,8 +153,6 @@ const AddIncome = ({ onBack, user }) => {
           Back
         </button>
       </div>
-      {/* <button className="submit-btn" onClick={handleSave}>Save</button>
-            <button className="submit-btn" onClick={onBack}>Back</button> */}
     </div>
   );
 };

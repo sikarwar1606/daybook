@@ -15,12 +15,14 @@ import express from 'express';
 import cors from 'cors';
 import authRouter from './routes/authRouter.js'
 import income from './routes/handleIncome.js'
+import expences from './routes/handleExpences.js'
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api', income)
+app.use('/api', expences)
 
 
 // ---------- 5. START SERVER ----------
