@@ -9,7 +9,7 @@
   width: 100%;
   max-width: 320px;
   margin: 0 auto;
-  padding: 14px 16px;
+  padding: 10px 16px;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -21,16 +21,16 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 6px 0;
+  padding: 3px 0;
 }
 
 .summary-label {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--muted);
 }
 
 .summary-value {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -45,7 +45,11 @@
 
 .summary-divider {
   border-top: 1px solid var(--line);
-  margin: 4px 0;
+  margin: 2px 0;
+}
+
+.balance-row {
+  padding: 4px 0 2px;
 }
 
 .balance-row .summary-label {
@@ -54,7 +58,7 @@
 }
 
 .summary-value.balance {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -64,7 +68,7 @@
 
 /* Loading skeleton */
 .summary.skeleton {
-  height: 110px;
+  height: 78px;
   background: linear-gradient(90deg, var(--paper) 25%, #efece5 37%, var(--paper) 63%);
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
@@ -81,10 +85,8 @@
   }
 }
 
-/* Slightly larger on bigger screens, but stays small overall */
 @media (min-width: 768px) {
   .summary {
     max-width: 340px;
-    padding: 16px 18px;
   }
 }

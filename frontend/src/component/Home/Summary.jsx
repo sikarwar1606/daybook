@@ -1,40 +1,8 @@
-import { useState, useEffect } from "react";
+import { useFinance } from "../../context/FinanceContext";
 import "./Summary.css";
 
-const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
-
-const Summary = ({ user }) => {
-    const [income, setIncome] = useState(0);
-    const [expenses, setExpenses] = useState(0);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchTotals = async () => {
-            setLoading(true);
-            try {
-                const [incomeRes, expenseRes] = await Promise.all([
-                    fetch(`${API_URL}/api/aggregate/income/${user.user_id}`),
-                    fetch(`${API_URL}/api/aggregate/expences/${user.user_id}`)
-                ]);
-
-                if (incomeRes.ok) {
-                    const data = await incomeRes.json();
-                    setIncome(Number(data.total));
-                }
-                if (expenseRes.ok) {
-                    const data = await expenseRes.json();
-                    setExpenses(Number(data.total));
-                }
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchTotals();
-    }, [user.user_id]);
-
+const Summary = () => {
+    const { income, expenses, loading } = useFinance();
     const balance = income - expenses;
 
     const formatCurrency = (value) =>

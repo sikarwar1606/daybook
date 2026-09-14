@@ -3,10 +3,10 @@ import React, { useState } from "react";
 import AddIncome from "./AddIncome.jsx";
 import AddExpences from "./AddExpences.jsx";
 
+
 const AddTransaction = ({user}) => {
   const [showIncome, setShowIncome] = useState(false);
   const [showExpence, setShowExpence] = useState(false);
-
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-8">
@@ -14,9 +14,9 @@ const AddTransaction = ({user}) => {
       </h2>
 
       {showIncome ? (
-        <AddIncome onBack={() => setShowIncome(false)} user={user} />
+        <AddIncome onBack={() => setShowIncome(false)} user={user}  />
       ) : showExpence ? (
-        <AddExpences onBack={() => setShowExpence(false)} user={user}/>
+        <AddExpences onBack={() => setShowExpence(false)} user={user}  />
       ) : (
         <div className="flex flex-col sm:flex-row gap-6 w-full max-w-md">
           <button

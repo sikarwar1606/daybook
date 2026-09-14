@@ -8,6 +8,7 @@ import Trending from "../AddData/Trending.jsx"
 import Navbar from "../Navbar.jsx"
 import Header from "./Header.jsx";
 import Summary from "./Summary.jsx";
+import {FinanceProvider} from "../../context/FinanceContext.jsx"
 
 // --- Usage in Home.jsx ---
 const goals = [
@@ -41,17 +42,18 @@ const Home = ({user, handleLogout}) => {
   const [currentPage, setCurrentPage] = useState("home");
 
   return (
+    <FinanceProvider user={user}>
+      
     <main className="home-page">
       <Header user={user} handleLogout={handleLogout} />
-      <Summary user={user} />
-      
-      {/* <NetWorth /> */}
+      <Summary  />
 
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       {currentPage === "home" && (<MultiJar totalSaved={totalSaved} goals={goals} /> )}
       {currentPage === "addTransaction" && <AddTransaction user={user}/>}
       {currentPage === "trending" && <Trending />}
     </main>
+    </FinanceProvider>
   );
 };
 

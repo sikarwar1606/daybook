@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Trash } from 'lucide-react';
 import './AddIncome.css'
+import {useFinance} from "../../context/FinanceContext.jsx"
 
 const AddIncome = ({ onBack, user }) => {
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
@@ -9,6 +10,7 @@ const AddIncome = ({ onBack, user }) => {
   const [loading, setLoading] = useState(true);
     const [isSaving, SetisSaving] = useState(false);
   const [isAdding, SetisAdding] = useState(false);
+  const {refreshTotals} = useFinance();
 
   // Load categories + amounts on mount
   useEffect(() => {
@@ -96,6 +98,7 @@ const AddIncome = ({ onBack, user }) => {
         }),
       });
       if (res.ok) {
+         await refreshTotals()
         onBack();
       } else {
         alert("Failed to save income");
