@@ -1,12 +1,14 @@
+import 'dotenv/config';
 import express from 'express'; 
 import {Pool} from 'pg';
 import {Router} from 'express';
+import pool from "../models/dbConnection.js"
 
 const router = Router();
-const pool = new Pool({
-    connectionString: process.env.DB_CONNECTION_STRING,
-    ssl: { rejectUnauthorized: false }
-});
+// const pool = new Pool({
+//     connectionString: process.env.DB_CONNECTION_STRING,
+//     ssl: { rejectUnauthorized: false }
+// });
 
 router.get('/aggregate/income/:user_id', async (req, res) => {
     const { user_id } = req.params;

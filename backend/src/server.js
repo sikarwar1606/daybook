@@ -17,6 +17,7 @@ import authRouter from './routes/authRouter.js'
 import income from './routes/handleIncome.js'
 import expences from './routes/handleExpences.js'
 import getIncome from './routes/getAllData.js'
+import setData from './routes/setAllData.js'
 
 const app = express();
 app.use(cors());
@@ -25,6 +26,7 @@ app.use('/api/auth', authRouter);
 app.use('/api', income)
 app.use('/api', expences)
 app.use('/api', getIncome)
+app.use('/api', setData)
 
 
 // ---------- 5. START SERVER ----------

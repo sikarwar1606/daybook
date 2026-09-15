@@ -45,7 +45,7 @@ const SavingsJar = ({ goal = 100000, saved = 150000 }) => {
         </div>
 
         {/* Details */}
-        <div className="space-y-3">
+        {/* <div className="space-y-3">
           <div>
             <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Saved</p>
             <p className="text-xl font-bold text-gray-900">
@@ -68,7 +68,7 @@ const SavingsJar = ({ goal = 100000, saved = 150000 }) => {
           <button className="mt-2 w-full text-sm font-medium text-white bg-[#156082] hover:bg-[#156082]/90 py-2 rounded-lg transition">
             + Add Money
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
   );

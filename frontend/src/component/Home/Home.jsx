@@ -46,7 +46,7 @@ const Home = ({user, handleLogout}) => {
       
     <main className="home-page">
       <Header user={user} handleLogout={handleLogout} />
-      <Summary  />
+      <Summary user={user} />
 
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       {currentPage === "home" && (<MultiJar totalSaved={totalSaved} goals={goals} /> )}

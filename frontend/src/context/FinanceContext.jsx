@@ -18,14 +18,17 @@ export const FinanceProvider = ({ user, children }) => {
                 fetch(`${API_URL}/api/aggregate/expences/${user.user_id}`)
             ]);
 
-            if (incomeRes.ok) {
-                const data = await incomeRes.json();
-                setIncome(Number(data.total));
-            }
-            if (expenseRes.ok) {
-                const data = await expenseRes.json();
-                setExpenses(Number(data.total));
-            }
+            // Resolve both JSON bodies concurrently too
+        const [incomeData, expenseData] = await Promise.all([
+            incomeRes.ok ? incomeRes.json() : Promise.resolve({ total: 0 }),
+            expenseRes.ok ? expenseRes.json() : Promise.resolve({ total: 0 })
+        ]);
+
+         // Now set both states back-to-back, no await between them
+        setIncome(Number(incomeData.total));
+        setExpenses(Number(expenseData.total));
+
+
         } catch (err) {
             console.error(err);
         } finally {

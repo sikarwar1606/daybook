@@ -1,12 +1,4 @@
 const ProfileSidebar = () => {
-
-
-
-
-
-
-
-
 return (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#156082] to-[#0d3b52] px-4">
     <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-8 text-center">
