@@ -111,3 +111,21 @@ ON CONFLICT (user_id, month)
 DO UPDATE SET
     saving = EXCLUDED.saving,
     updated_at = NOW();   
+
+
+CREATE TABLE recommended_jar_category(
+  rj_category_id  SERIAL PRIMARY KEY,
+  category_name text NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+)
+
+
+CREATE TABLE jar_category(
+  category_id SERIAL PRIMARY KEY, 
+  user_id INTEGER NOT NULL REFERENCES users(user_id),
+  category_name text NOT NULL,
+  jar_limit INTEGER NOT NULL,
+  rj_category_id INTEGER REFERENCES recommended_jar_category(rj_category_id),
+  created_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, category_name)
+)   

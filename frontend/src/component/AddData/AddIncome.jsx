@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import { Trash } from 'lucide-react';
-import './AddIncome.css'
-import {useFinance} from "../../context/FinanceContext.jsx"
+import { Trash } from "lucide-react";
+import "./AddIncome.css";
+import { useFinance } from "../../context/FinanceContext.jsx";
 
 const AddIncome = ({ onBack, user }) => {
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [loading, setLoading] = useState(true);
-    const [isSaving, SetisSaving] = useState(false);
+  const [isSaving, SetisSaving] = useState(false);
   const [isAdding, SetisAdding] = useState(false);
-  const {refreshTotals} = useFinance();
+  const { refreshTotals } = useFinance();
 
   // Load categories + amounts on mount
   useEffect(() => {
@@ -40,7 +40,7 @@ const AddIncome = ({ onBack, user }) => {
 
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) return;
-    SetisAdding(true)
+    SetisAdding(true);
     try {
       const res = await fetch(`${API_URL}/api/income/category`, {
         method: "POST",
@@ -60,7 +60,7 @@ const AddIncome = ({ onBack, user }) => {
     } catch (err) {
       console.error(err);
       alert("Network error");
-    }finally{
+    } finally {
       SetisSaving(false);
     }
   };
@@ -84,7 +84,7 @@ const AddIncome = ({ onBack, user }) => {
   };
 
   const handleSave = async () => {
-    SetisSaving(true)
+    SetisSaving(true);
     try {
       const res = await fetch(`${API_URL}/api/income`, {
         method: "POST",
@@ -98,7 +98,7 @@ const AddIncome = ({ onBack, user }) => {
         }),
       });
       if (res.ok) {
-         await refreshTotals()
+        await refreshTotals();
         onBack();
       } else {
         alert("Failed to save income");
@@ -106,7 +106,7 @@ const AddIncome = ({ onBack, user }) => {
     } catch (err) {
       console.error(err);
       alert("Network error");
-    }finally{
+    } finally {
       SetisSaving(false);
     }
   };
@@ -136,7 +136,6 @@ const AddIncome = ({ onBack, user }) => {
             >
               <Trash />
             </button>
-            
           </div>
         ))}
 
@@ -148,7 +147,11 @@ const AddIncome = ({ onBack, user }) => {
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
           />
-          <button className="submit-btn" onClick={handleAddCategory} disabled={isAdding}>
+          <button
+            className="submit-btn"
+            onClick={handleAddCategory}
+            disabled={isAdding}
+          >
             {isAdding ? <span className="spinner" /> : "+Add"}
           </button>
         </div>
@@ -158,10 +161,10 @@ const AddIncome = ({ onBack, user }) => {
 
       <div className="button-row">
         <button className="submit-btn" onClick={handleSave} disabled={isSaving}>
-          {isSaving ? <span className="spinner"/> : "Save"}
+          {isSaving ? <span className="spinner" /> : "Save"}
         </button>
         <button className="submit-btn" onClick={onBack} disbaled={isSaving}>
-          {isSaving ? <span className="spinner"/> : "Back"}
+          {isSaving ? <span className="spinner" /> : "Back"}
         </button>
       </div>
     </div>

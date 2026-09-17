@@ -10,35 +10,11 @@ import Header from "./Header.jsx";
 import Summary from "./Summary.jsx";
 import {FinanceProvider} from "../../context/FinanceContext.jsx"
 
-// --- Usage in Home.jsx ---
-const goals = [
-  {
-    id: 1,
-    name: "Emergency Fund",
-    target: 100000,
-    risk: "low",
-    color: "#156082",
-  },
-  {
-    id: 2,
-    name: "Safe Savings",
-    target: 200000,
-    risk: "low",
-    color: "#3a8bb5",
-  },
-  {
-    id: 3,
-    name: "Moderate Growth",
-    target: 500000,
-    risk: "medium",
-    color: "#6db3d4",
-  },
-];
-
+const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 const Home = ({user, handleLogout}) => {
-  const [totalSaved, setTotalSaved] = useState(140000);
-
+  const [totalSaved, setTotalSaved] = useState();
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState("home");
 
   return (
@@ -49,7 +25,7 @@ const Home = ({user, handleLogout}) => {
       <Summary user={user} />
 
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-      {currentPage === "home" && (<MultiJar totalSaved={totalSaved} goals={goals} /> )}
+      {currentPage === "home" && (<MultiJar user={user} /> )}
       {currentPage === "addTransaction" && <AddTransaction user={user}/>}
       {currentPage === "trending" && <Trending />}
     </main>
