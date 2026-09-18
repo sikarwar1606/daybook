@@ -13,8 +13,6 @@ router.post('/setData/savings', async (req, res) => {
     if(last && Date.now() - last< LOCK){
         return res.status(429).json({error:"Already synced. Try again later"});
     }
-
-
     try {
         const result = await pool.query(
             `INSERT INTO monthly_savings (user_id, month, saving)
@@ -32,7 +30,9 @@ router.post('/setData/savings', async (req, res) => {
         console.error(err);
         res.status(500).json({ error: 'Something went wrong' });
     }
-});   
+});  
+
+
 
 
 export default router

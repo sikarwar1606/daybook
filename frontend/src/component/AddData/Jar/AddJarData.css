@@ -1,0 +1,173 @@
+.jar-empty-state {
+  --ink: #14231F;
+  --paper: #FAF8F4;
+  --accent: #2F6F5E;
+  --muted: #8A8F87;
+  --line: #E4E0D6;
+
+  width: 100%;
+  max-width: 420px;
+  margin: 24px auto;
+  padding: 32px 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(20, 35, 31, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Icon button (the "+") */
+.jar-add-icon-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(47, 111, 94, 0.1);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.jar-add-icon-btn:hover,
+.jar-add-icon-btn:focus-visible {
+  background: rgba(47, 111, 94, 0.18);
+  transform: scale(1.04);
+}
+
+.jar-add-icon-btn svg {
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+}
+
+.jar-empty-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.jar-empty-subtitle {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+/* Create-jar form */
+.jar-form {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.jar-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: white;
+  box-sizing: border-box;
+}
+
+.jar-form input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.jar-form input::placeholder {
+  color: var(--muted);
+}
+
+.jar-form-save-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--paper);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.jar-form-save-btn:hover:not(:disabled) {
+  background: #245849;
+}
+
+.jar-form-save-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.jar-form-cancel-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.jar-form-cancel-btn:hover {
+  color: var(--ink);
+}
+
+/* Accessibility */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jar-add-icon-btn {
+    transition: none;
+  }
+}
+
+/* --- Tablet --- */
+@media (min-width: 640px) {
+  .jar-empty-state {
+    max-width: 480px;
+    padding: 40px 32px;
+  }
+
+  .jar-add-icon-btn {
+    width: 64px;
+    height: 64px;
+  }
+
+  .jar-add-icon-btn svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .jar-empty-title {
+    font-size: 1.05rem;
+  }
+
+  .jar-form {
+    max-width: 320px;
+  }
+}
+
+/* --- Desktop / laptop --- */
+@media (min-width: 1024px) {
+  .jar-empty-state {
+    max-width: 520px;
+    padding: 48px 40px;
+  }
+}

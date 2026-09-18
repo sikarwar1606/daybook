@@ -1,21 +1,10 @@
-// ============================================================
-// PERN AUTH - single-file backend (Google Sign-In)
-// Everything lives here for now: DB connection, routes, JWT logic.
-//
-// Flow: Frontend gets an ID token from Google
-//       -> sends it to POST /api/auth/google
-//       -> we verify that token really came from Google
-//       -> we find or create a user with that email
-//       -> we issue OUR OWN JWT so the frontend can stay "logged in"
-//       -> /me is a protected route that reads that JWT
-// ============================================================
-
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import authRouter from './routes/authRouter.js'
 import income from './routes/handleIncome.js'
 import expences from './routes/handleExpences.js'
+import jar from './routes/handleJar.js'
 import getIncome from './routes/getAllData.js'
 import setData from './routes/setAllData.js'
 
@@ -27,6 +16,7 @@ app.use('/api', income)
 app.use('/api', expences)
 app.use('/api', getIncome)
 app.use('/api', setData)
+app.use('/api', jar)
 
 
 // ---------- 5. START SERVER ----------

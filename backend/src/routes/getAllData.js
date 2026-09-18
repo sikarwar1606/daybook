@@ -6,10 +6,7 @@ import pool from "../models/dbConnection.js"
 
 const router = Router();
 
-// const pool = new Pool({
-//     connectionString: process.env.DB_CONNECTION_STRING,
-//     ssl: { rejectUnauthorized: false }
-// });
+
 
 router.get('/aggregate/income/:user_id', async (req, res) => {
     const { user_id } = req.params;
@@ -85,6 +82,16 @@ router.get('/aggregate/leaderboard', async (req, res) => {
     }
 });
 
+
+router.get('/aggregate/recomendate_jar', async(req, res)=>{
+    try{
+        const result = await pool.query(`SELECT * FROM recommended_jar_category`);
+        res.status(200).json({recomended:result.rows});
+    }catch(err){
+        console.error(err);
+        res.send(500).json({error : "Error whicle fetching the recommended jar"});
+    }
+})
 
 
 export default router

@@ -1,44 +1,99 @@
 import { useState, useEffect } from "react";
-
+import AddJarData from "../AddData/Jar/AddJarData.jsx";
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 const MultiJar = ({ user }) => {
-  // We need totalSaved value from db
-  // const totalSaved = 15000;
-
   const [goals, setGoals] = useState([]);
-  const [totalSaved, setTotalSaved ]= useState();
+  const [recommendedJar, setRecommendedJar] = useState([]);
+  const [totalSaved, setTotalSaved] = useState();
   const [loading, setLoading] = useState(true);
+  const [showCreateJar, setShowCreateJar] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [categoryName, SetCategoryName] = useState("");
+  const [jarLimit, setJarLimit] = useState("");
+  const [rjCategoryId, SetRjCategoryId] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  //This function is used to get the data from database
+  const fetchData = async () => {
+    try {
+      const [res_jar, res_recommended, res_saving] = await Promise.all([
+        fetch(`${API_URL}/api/aggregate/jar_category/${user.user_id}`),
+        fetch(`${API_URL}/api/aggregate/recomendate_jar`),
+        fetch(`${API_URL}/api/aggregate/saving/${user.user_id}`),
+      ]);
+
+      const jar_data = res_jar.ok ? await res_jar.json() : {};
+      const recommended_data = res_recommended.ok
+        ? await res_recommended.json()
+        : {};
+      const saving_data = res_saving.ok
+        ? await res_saving.json()
+        : { saving: 0 };
+
+      setGoals(jar_data.goals ?? []);
+      setRecommendedJar(recommended_data.recomended ?? []);
+      setTotalSaved(saving_data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try{
-          const [res_jar, res_saving] = await Promise.all([
-            fetch(`${API_URL}/api/aggregate/jar_category/${user.user_id}`),
-            fetch(`${API_URL}/api/aggregate/saving/${user.user_id}`)
-          ])
-
-          const jar_data = res_jar.ok ? await res_jar.json() : {};
-          const saving_data = res_saving.ok ? await res_saving.json() : {saving : 0};
-
-          
-          setGoals(jar_data.goals ?? []);
-          setTotalSaved(saving_data);
-
-      }catch(err){
-        console.error(err)
-      }finally{
-        setLoading(false);
-      }
-    };
     fetchData();
   }, [user.user_id]);
 
+  const handleCreateJar = async () => {
+    if (!categoryName.trim() || !jarLimit) return;
+    setIsCreating(true);
+    try {
+      const res = await fetch(`${API_URL}/api/jar/category`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: user.user_id,
+          category_name: categoryName,
+          jar_limit: Number(jarLimit),
+          rj_category_id: rjCategoryId,
+        }),
+      });
+      if (res.ok) {
+        await fetchData();
+        setShowCreateJar(false);
+        SetCategoryName("");
+        setJarLimit("");
+        setActiveIndex(jars.length);
+      } else {
+        alert("Failed to create jar");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error");
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
+  const color = "#3a8bb5";
 
-  const color = "#3a8bb5"
+  // const [activeIndex, setActiveIndex] = useState(0);
+  if (loading) return <p>Loading...</p>;
 
-  const [activeIndex, setActiveIndex] = useState(0);
-   if (loading) return <p>Loading...</p>;
+  if (goals.length === 0) {
+    return (
+      <AddJarData
+        showCreateJar={showCreateJar}
+        categoryName={categoryName}
+        jarLimit={jarLimit}
+        isCreating={isCreating}
+        setShowCreateJar={setShowCreateJar}
+        SetCategoryName={SetCategoryName}
+        setJarLimit={setJarLimit}
+        handleCreateJar={handleCreateJar}
+      />
+    );
+  }
 
   const jars = goals.map((goal, index) => {
     const previousTotal = goals
@@ -64,7 +119,7 @@ const MultiJar = ({ user }) => {
   const currentJar = jars[activeIndex];
 
   const prev = () => setActiveIndex((i) => Math.max(0, i - 1));
-  const next = () => setActiveIndex((i) => Math.min(jars.length - 1, i + 1));
+  const next = () => setActiveIndex((i) => Math.min(jars.length, i + 1));
 
   return (
     <section className="bg-white rounded-2xl shadow-lg p-5 mb-4 mt-10">
@@ -92,7 +147,7 @@ const MultiJar = ({ user }) => {
         )}
 
         {/* Right arrow */}
-        {activeIndex < jars.length - 1 && (
+        {activeIndex < jars.length && (
           <button
             onClick={next}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md border border-gray-200 active:scale-95 transition"
@@ -183,45 +238,35 @@ const MultiJar = ({ user }) => {
                 >
                   {jar.name}
                 </p>
-                {/* <p className="text-[10px] text-gray-400">
-                  ₹{jar.target.toLocaleString("en-IN")}
-                </p> */}
-                <p className="text-[10px] text-gray-400">
-                  ₹{jar.jar_limit}
-                </p>
 
-                {/* Filled amount */}
-                {/* <p className="mt-1 text-xs font-semibold text-gray-700">
-                  ₹
-                  {Math.round((jar.filled / 100) * jar.target).toLocaleString(
-                    "en-IN",
-                  )}{" "}
-                  / ₹{jar.target.toLocaleString("en-IN")}
-                </p> */}
+                <p className="text-[10px] text-gray-400">₹{jar.jar_limit}</p>
+
                 <p className="mt-1 text-xs font-semibold text-gray-700">
-                  ₹
-                  {Math.round((jar.filled / 100) * jar.jar_limit)}{" "}
-                  / ₹{jar.jar_limit}
+                  ₹{Math.round((jar.filled / 100) * jar.jar_limit)} / ₹
+                  {jar.jar_limit}
                 </p>
-
-                {/* Risk badge */}
-                {/* <span
-                  className={`mt-1 text-[10px] font-medium px-2 py-0.5 rounded-full ${
-                    jar.risk === "low"
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
-                >
-                  {jar.risk === "low" ? "Low Risk" : "Moderate Risk"}
-                </span> */}
               </div>
             ))}
+
+            {/* Extra "Add Jar" slide at the end — same flex row, not a nested wrapper */}
+            <div className="w-full flex-shrink-0">
+              <AddJarData
+                showCreateJar={showCreateJar}
+                categoryName={categoryName}
+                jarLimit={jarLimit}
+                isCreating={isCreating}
+                setShowCreateJar={setShowCreateJar}
+                SetCategoryName={SetCategoryName}
+                setJarLimit={setJarLimit}
+                handleCreateJar={handleCreateJar}
+              />
+            </div>
           </div>
         </div>
 
         {/* Dots */}
         <div className="flex justify-center gap-1.5 mt-4">
-          {jars.map((_, i) => (
+          {[jars, { isAddSlide: true }].map((_, i) => (
             <button
               key={i}
               onClick={() => setActiveIndex(i)}
@@ -236,9 +281,7 @@ const MultiJar = ({ user }) => {
       {/* Total saved */}
       <div className="mt-4 pt-4 border-t border-gray-100 text-center">
         <p className="text-xs text-gray-500">Total Saved</p>
-        <p className="text-xl font-bold text-[#156082]">
-          ₹{totalSaved}
-        </p>
+        <p className="text-xl font-bold text-[#156082]">₹{totalSaved}</p>
       </div>
     </section>
   );
