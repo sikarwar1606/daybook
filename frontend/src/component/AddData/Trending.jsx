@@ -1,30 +1,62 @@
 // Trending.jsx
 import React from "react";
+import { useState, useEffect } from "react";
 import "./Trending.css";
 
-const Trending = () => {
-  const items = [
-    { id: 1, name: "Name", rank: "Rank" },
-    { id: 2, name: "Name", rank: "Rank" },
-    { id: 3, name: "Name", rank: "Rank" },
-    { id: 4, name: "Name", rank: "Rank" },
-  ];
+const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+const Trending = ({ user }) => {
+  // const items = [
+  //   { id: 1, name: "Name", rank: "Rank" },
+  //   { id: 2, name: "Name", rank: "Rank" },
+  //   { id: 3, name: "Name", rank: "Rank" },
+  //   { id: 4, name: "Name", rank: "Rank" },
+  // ];
+
+  //  {
+  //     "user_id": 5,
+  //     "avatar_url": "https://lh3.googleusercontent.com/a/ACg8ocI5GObDXVwod3TwiiJnzJidBCw3WArN2xbBKWC89LmYb8f9aQ=s96-c",
+  //     "nick_name": "hustler8889",
+  //     "total_savings": "34000.00"
+  // },
+
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const getLeadBord = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/aggregate/leaderboard`);
+        if (res.ok) {
+          const data = await res.json();
+          setItems(data.leaderboard);
+          console.log(items);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getLeadBord();
+  }, [user.user_id]);
 
   return (
     <div className="trending-list">
-      {items.map((item) => (
-        <div className="trending-row" key={item.id}>
+      {items.map((item, index) => (
+        <div className="trending-row" key={index}>
           <div className="avatar">
-            <svg viewBox="0 0 24 24" fill="white" width="20" height="20">
-              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-            </svg>
+            <img
+              src={item.avatar_url}
+              alt={item.username || "User avatar"}
+              width="25"
+              height="25"
+              style={{ borderRadius: "50%", objectFit: "cover" }}
+            />
           </div>
-          <span className="name">{item.name}</span>
-          <span className="rank">{item.rank}</span>
+          <span className="name">{item.nick_name}</span>
+          {/* <span className="rank">{item.rank}</span> */}
+          {/* <span className="rank">{item.rank}</span> */}
         </div>
       ))}
     </div>
   );
 };
 
-export default Trending;   
+export default Trending;

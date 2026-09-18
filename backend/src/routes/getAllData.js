@@ -69,6 +69,22 @@ router.get('/aggregate/saving/:user_id', async(req,res)=>{
 
 })
 
+router.get('/aggregate/leaderboard', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT us.user_id, us.avatar_url, us.nick_name, COALESCE(SUM(ms.saving), 0) AS total_savings
+            FROM users AS us
+            LEFT JOIN monthly_savings AS ms ON us.user_id = ms.user_id
+            GROUP BY us.user_id, us.nick_name
+            ORDER BY total_savings DESC
+        `);
+        res.status(200).json({ leaderboard: result.rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch leaderboard" });
+    }
+});
+
 
 
 export default router

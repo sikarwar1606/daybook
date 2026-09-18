@@ -27,7 +27,7 @@ const Home = ({user, handleLogout}) => {
       <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
       {currentPage === "home" && (<MultiJar user={user} /> )}
       {currentPage === "addTransaction" && <AddTransaction user={user}/>}
-      {currentPage === "trending" && <Trending />}
+      {currentPage === "trending" && <Trending user={user} />}
     </main>
     </FinanceProvider>
   );

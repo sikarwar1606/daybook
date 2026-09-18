@@ -25,7 +25,7 @@ const ProfileSidebar = ({ onClose, user,handleLogout }) => {
           />
         </div>
         <h3 className="mt-3 text-sm font-bold text-gray-900">{user.username}</h3>
-        <p className="text-xs text-gray-500">{user.email}</p>
+        <p className="text-xs text-gray-500">{user.nick_name}</p>
       </div>
 
       {/* Menu */}

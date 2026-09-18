@@ -17,7 +17,9 @@ const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 router.post('/google', async (req, res) => {
   const { credential } = await req.body; // this is the Google ID token (a JWT from Google)
-
+  const words = ['pooki','vibe', 'lowkey', 'no cap', 'slay', 'thug','hustlers'];
+  const now = Date.now();
+  const nick_name = `${words[Math.floor(Math.random()* words.length)]}_${now}`
   if (!credential) {
     return res.status(400).json({ error: 'Missing Google credential' });
   }else{
@@ -43,8 +45,8 @@ router.post('/google', async (req, res) => {
       user = result.rows[0];
     } else {
       const insertResult = await pool.query(
-        'INSERT INTO users (google_id, username, email, avatar_url) VALUES ($1, $2, $3, $4) RETURNING *',
-        [googleId, name, email, picture]
+        'INSERT INTO users (google_id, username,nick_name, email, avatar_url) VALUES ($1, $2, $3, $4,$5) RETURNING *',
+        [googleId, name,nick_name, email, picture]
       );
       user = insertResult.rows[0];
     }
@@ -53,7 +55,7 @@ router.post('/google', async (req, res) => {
     const token = jwt.sign({ userId: user.user_id }, JWT_SECRET, { expiresIn: '365d' });
 
     res.json({
-      user: { id: user.user_id, username: user.username, email: user.email, avatarUrl: user.avatar_url },
+      user: { id: user.user_id, username: user.username, nick_name: user.nick_name, email: user.email, avatarUrl: user.avatar_url },
       token,
     });
   } catch (err) {
@@ -66,7 +68,7 @@ router.post('/google', async (req, res) => {
 router.get('/me', authMiddleware, async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT user_id, username, email, avatar_url, created_at FROM users WHERE user_id = $1',
+      'SELECT user_id, username, nick_name, email, avatar_url, created_at FROM users WHERE user_id = $1',
       [req.userId]
     );
 
