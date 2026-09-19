@@ -239,7 +239,9 @@ const MultiJar = ({ user }) => {
                   {jar.name}
                 </p>
 
-                <p className="text-[10px] text-gray-400">₹{jar.jar_limit}</p>
+                <div className="flex  items-center justify-center w-20 h-5 rounded border border-blue-300 shadow-blue-100">
+                  <p className="text-[15px] text-black ">{jar.category_name}</p>
+                </div>
 
                 <p className="mt-1 text-xs font-semibold text-gray-700">
                   ₹{Math.round((jar.filled / 100) * jar.jar_limit)} / ₹
@@ -279,10 +281,17 @@ const MultiJar = ({ user }) => {
       </div>
 
       {/* Total saved */}
-      <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+      {/* <div className="mt-4 pt-4 border-t border-gray-100 text-center">
         <p className="text-xs text-gray-500">Total Saved</p>
         <p className="text-xl font-bold text-[#156082]">₹{totalSaved}</p>
-      </div>
+      </div> */}
+
+      <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+    <p className="text-xs text-gray-500">Total Saved</p>
+    <p className="text-xl font-bold shimmer-text">
+        ₹{totalSaved}
+    </p>
+</div>   
     </section>
   );
 };
