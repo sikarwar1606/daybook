@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Trash } from "lucide-react";
-import AddJarData from "../AddData/Jar/AddJarData.jsx";
 import Loader from "../../Loader.jsx"
+import AddJarData from "../AddData/Jar/AddJarData.jsx";
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 const MultiJar = ({ user }) => {
@@ -15,10 +15,8 @@ const MultiJar = ({ user }) => {
   const [jarLimit, setJarLimit] = useState("");
   const [rjCategoryId, SetRjCategoryId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
-
   const fetchData = async () => {
-    if(user){
-      try {
+    try {
       const [res_jar, res_recommended, res_saving] = await Promise.all([
         fetch(`${API_URL}/api/aggregate/jar_category/${user.user_id}`),
         fetch(`${API_URL}/api/aggregate/recomendate_jar`),
@@ -41,8 +39,6 @@ const MultiJar = ({ user }) => {
     } finally {
       setLoading(false);
     }
-    }
-    
   }; 
 
   useEffect(() => {
@@ -147,7 +143,8 @@ const MultiJar = ({ user }) => {
   const next = () => setActiveIndex((i) => Math.min(jars.length, i + 1));
 
   return (
-    <section className="bg-white rounded-2xl shadow-lg p-5 mb-4 mt-10">
+    // <section className="bg-white rounded-2xl shadow-lg p-5 mb-4 mt-10">
+    <section className="bg-white rounded-2xl  p-5 mb-4 mt-15">
       <div className="relative">
         {/* Left arrow */}
         {activeIndex > 0 && (

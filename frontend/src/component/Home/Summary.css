@@ -7,12 +7,12 @@
   --danger: #B3503E;
 
   width: 100%;
-  max-width: 320px;
+  /* max-width: 320px; */
   margin: 0 auto;
-  padding: 10px 16px;
+  padding: 5px 16px;
   background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  /* border-radius: 8px; */
   font-family: system-ui, -apple-system, sans-serif;
   color: var(--ink);
 }
@@ -21,7 +21,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 3px 0;
+  padding: 0px 0;
 }
 
 .summary-label {

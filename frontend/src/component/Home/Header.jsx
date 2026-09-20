@@ -8,7 +8,7 @@ const Header = ({user,handleLogout}) => {
 
   return (
     <>
-      <header className="bg-[#156082] text-white px-4 py-3 sm:px-6 flex items-center justify-between rounded-b-xl shadow-md">
+      <header className="bg-[#156082] text-white px-4 py-3 sm:px-6 flex items-center justify-between  shadow-md">
         <h3 className="text-lg font-bold tracking-tight">Daybook</h3>
         <button
           onClick={() => setShowProfile(true)}
