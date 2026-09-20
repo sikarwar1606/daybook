@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { Trash } from "lucide-react";
 import AddJarData from "../AddData/Jar/AddJarData.jsx";
+import Loader from "../../Loader.jsx"
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 const MultiJar = ({ user }) => {
@@ -13,9 +15,10 @@ const MultiJar = ({ user }) => {
   const [jarLimit, setJarLimit] = useState("");
   const [rjCategoryId, SetRjCategoryId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  //This function is used to get the data from database
+
   const fetchData = async () => {
-    try {
+    if(user){
+      try {
       const [res_jar, res_recommended, res_saving] = await Promise.all([
         fetch(`${API_URL}/api/aggregate/jar_category/${user.user_id}`),
         fetch(`${API_URL}/api/aggregate/recomendate_jar`),
@@ -38,7 +41,9 @@ const MultiJar = ({ user }) => {
     } finally {
       setLoading(false);
     }
-  };
+    }
+    
+  }; 
 
   useEffect(() => {
     fetchData();
@@ -74,11 +79,31 @@ const MultiJar = ({ user }) => {
       setIsCreating(false);
     }
   };
+  
+  const handleDeleteJar = async (category_id,category_name ) => {
+    try {
+      const res = await fetch(`${API_URL}/api/jar/category/${category_id}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        alert(`Category ${category_name} deleted sucessfully`)
+        setGoals((prev) =>
+          prev.filter((c) => c.category_id !== category_id),
+        );
+      } else {
+        alert("Failed to delete category");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Network error");
+    }
+  };
+ 
 
   const color = "#3a8bb5";
 
   // const [activeIndex, setActiveIndex] = useState(0);
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
 
   if (goals.length === 0) {
     return (
@@ -239,8 +264,15 @@ const MultiJar = ({ user }) => {
                   {jar.name}
                 </p>
 
-                <div className="flex  items-center justify-center w-20 h-5 rounded border border-blue-300 shadow-blue-100">
-                  <p className="text-[15px] text-black ">{jar.category_name}</p>
+                
+                <div className="">
+                  <button className="flex flex-row items-center justify-center w-50 h-10 rounded border border-blue-300 gap-2 shadow-blue-100"
+                    onClick={()=>handleDeleteJar(jar.category_id, jar.category_name)}
+                    // () => handleDeleteCategory(cat.category_id)
+                  >
+                    {jar.category_name}
+                    <Trash size={20} />
+                  </button>
                 </div>
 
                 <p className="mt-1 text-xs font-semibold text-gray-700">
@@ -280,18 +312,10 @@ const MultiJar = ({ user }) => {
         </div>
       </div>
 
-      {/* Total saved */}
-      {/* <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-        <p className="text-xs text-gray-500">Total Saved</p>
-        <p className="text-xl font-bold text-[#156082]">₹{totalSaved}</p>
-      </div> */}
-
       <div className="mt-4 pt-4 border-t border-gray-100 text-center">
-    <p className="text-xs text-gray-500">Total Saved</p>
-    <p className="text-xl font-bold shimmer-text">
-        ₹{totalSaved}
-    </p>
-</div>   
+        <p className="text-xs text-gray-500">Total Saved</p>
+        <p className="text-xl font-bold shimmer-text">₹{totalSaved}</p>
+      </div>
     </section>
   );
 };
