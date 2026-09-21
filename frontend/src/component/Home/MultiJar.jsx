@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Trash } from "lucide-react";
-import Loader from "../../Loader.jsx"
+import Loader from "../../Loader.jsx";
 import AddJarData from "../AddData/Jar/AddJarData.jsx";
+import SavingJar from "../../SavingJar.jsx";
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
 const MultiJar = ({ user }) => {
@@ -15,6 +16,7 @@ const MultiJar = ({ user }) => {
   const [jarLimit, setJarLimit] = useState("");
   const [rjCategoryId, SetRjCategoryId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [Isdelete, setDelete] = useState(false);
   const fetchData = async () => {
     try {
       const [res_jar, res_recommended, res_saving] = await Promise.all([
@@ -39,7 +41,7 @@ const MultiJar = ({ user }) => {
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
   useEffect(() => {
     fetchData();
@@ -75,26 +77,25 @@ const MultiJar = ({ user }) => {
       setIsCreating(false);
     }
   };
-  
-  const handleDeleteJar = async (category_id,category_name ) => {
+
+  const handleDeleteJar = async (category_id, category_name) => {
     try {
       const res = await fetch(`${API_URL}/api/jar/category/${category_id}`, {
         method: "DELETE",
       });
       if (res.ok) {
-        alert(`Category ${category_name} deleted sucessfully`)
-        setGoals((prev) =>
-          prev.filter((c) => c.category_id !== category_id),
-        );
+        alert(`Category ${category_name} deleted sucessfully`);
+        setGoals((prev) => prev.filter((c) => c.category_id !== category_id));
       } else {
         alert("Failed to delete category");
       }
     } catch (err) {
       console.error(err);
       alert("Network error");
+    }finally{
+      setDelete(false)
     }
   };
- 
 
   const color = "#3a8bb5";
 
@@ -143,8 +144,7 @@ const MultiJar = ({ user }) => {
   const next = () => setActiveIndex((i) => Math.min(jars.length, i + 1));
 
   return (
-    // <section className="bg-white rounded-2xl shadow-lg p-5 mb-4 mt-10">
-    <section className="bg-white rounded-2xl  p-5 mb-4 mt-15">
+    <section className="relative bg-white rounded-2xl  p-5 mb-4 mt-15">
       <div className="relative">
         {/* Left arrow */}
         {activeIndex > 0 && (
@@ -201,35 +201,30 @@ const MultiJar = ({ user }) => {
                 key={jar.category_id}
                 className="w-full flex-shrink-0 flex flex-col items-center px-4"
               >
-                {/* Jar */}
-                <div className="relative w-80 h-100">
-                  <div
-                    className={`absolute inset-0 rounded-b-2xl rounded-t-md border-2 overflow-hidden transition-all duration-500 ${
+                {/* Jar (new animated glass jar) */}
+                <div className="relative w-80">
+                  <SavingJar
+                    fill={jar.filled / 100}
+                    waterColor={color}
+                    label=""
+                    showFalling={jar.isActive}
+                    outlineColor={
                       jar.isActive
-                        ? "border-[#156082] shadow-md"
+                        ? "#156082"
                         : jar.isFull
-                          ? "border-green-400"
-                          : "border-gray-200"
+                          ? "#4ADE80"
+                          : "#7FA9BF"
+                    }
+                    className={`transition-all duration-500 ${
+                      jar.isActive ? "drop-shadow-md" : ""
                     }`}
-                  >
-                    <div
-                      className="absolute bottom-0 left-0 right-0 transition-all duration-1000 ease-out"
-                      style={{
-                        height: `${jar.filled}%`,
-                        background: `linear-gradient(to top, ${color}, ${color}88)`,
-                      }}
-                    />
-                    <div className="absolute top-2 left-1.5 w-0.5 h-16 bg-white/50 rounded-full" />
-                  </div>
-
-                  {/* Lid */}
-                  <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-14 h-3 bg-gray-300 rounded-full border border-gray-200" />
+                  />
 
                   {/* Checkmark */}
                   {jar.isFull && (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <svg
-                        className="w-8 h-8 text-green-500"
+                        className="w-20 h-20 text-green-500"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -260,12 +255,39 @@ const MultiJar = ({ user }) => {
                 >
                   {jar.name}
                 </p>
-
                 
+                {/* This is confirmation page to delete the jar */}
+                {Isdelete && (
+                  <div className=" absolute bg-gray-200 border inset-5 z-10 h-1/3 w-2/3 rounded-2xl p-2 m-10 mt-55 ">
+                    <p className="text-2xl">Are you sure</p>
+                    <div className="flex m-5 mt-10  gap-10">
+                      <button
+                        className="bg-red-500 border border-amber-50 rounded-2xl w-100 h-10 "
+                        onClick={() =>
+                          handleDeleteJar(jar.category_id, jar.category_name)
+                        }
+                      >
+                        Delete
+                      </button>
+                      <button className="border border-amber-50 rounded-2xl w-100 h-10 "
+                      onClick={() =>
+                      // handleDeleteJar(jar.category_id, jar.category_name)
+                      setDelete(false)
+                    }
+                      >
+                        Cancle
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div className="">
-                  <button className="flex flex-row items-center justify-center w-50 h-10 rounded border border-blue-300 gap-2 shadow-blue-100"
-                    onClick={()=>handleDeleteJar(jar.category_id, jar.category_name)}
-                    // () => handleDeleteCategory(cat.category_id)
+                  <button
+                    className="flex flex-row items-center justify-center w-50 h-10 rounded border border-blue-300 gap-2 shadow-blue-100"
+                    onClick={() =>
+                      // handleDeleteJar(jar.category_id, jar.category_name)
+                      setDelete(true)
+                    }
                   >
                     {jar.category_name}
                     <Trash size={20} />
@@ -314,6 +336,177 @@ const MultiJar = ({ user }) => {
         <p className="text-xl font-bold shimmer-text">₹{totalSaved}</p>
       </div>
     </section>
+
+    // <section className="bg-white rounded-2xl shadow-lg p-5 mb-4 mt-10">
+    // <section className="bg-white rounded-2xl  p-5 mb-4 mt-15">
+    //   <div className="relative">
+    //     {/* Left arrow */}
+    //     {activeIndex > 0 && (
+    //       <button
+    //         onClick={prev}
+    //         className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md border border-gray-200 active:scale-95 transition"
+    //       >
+    //         <svg
+    //           className="w-4 h-4 text-gray-600"
+    //           fill="none"
+    //           stroke="currentColor"
+    //           viewBox="0 0 24 24"
+    //         >
+    //           <path
+    //             strokeLinecap="round"
+    //             strokeLinejoin="round"
+    //             strokeWidth={2}
+    //             d="M15 19l-7-7 7-7"
+    //           />
+    //         </svg>
+    //       </button>
+    //     )}
+
+    //     {/* Right arrow */}
+    //     {activeIndex < jars.length && (
+    //       <button
+    //         onClick={next}
+    //         className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-white shadow-md border border-gray-200 active:scale-95 transition"
+    //       >
+    //         <svg
+    //           className="w-4 h-4 text-gray-600"
+    //           fill="none"
+    //           stroke="currentColor"
+    //           viewBox="0 0 24 24"
+    //         >
+    //           <path
+    //             strokeLinecap="round"
+    //             strokeLinejoin="round"
+    //             strokeWidth={2}
+    //             d="M9 5l7 7-7 7"
+    //           />
+    //         </svg>
+    //       </button>
+    //     )}
+
+    //     {/* Slider */}
+    //     <div className="overflow-hidden">
+    //       <div
+    //         className="flex transition-transform duration-300 ease-out"
+    //         style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+    //       >
+    //         {jars.map((jar) => (
+    //           <div
+    //             key={jar.category_id}
+    //             className="w-full flex-shrink-0 flex flex-col items-center px-4"
+    //           >
+    //             {/* Jar */}
+    //             <div className="relative w-80 h-100">
+    //               <div
+    //                 className={`absolute inset-0 rounded-b-2xl rounded-t-md border-2 overflow-hidden transition-all duration-500 ${
+    //                   jar.isActive
+    //                     ? "border-[#156082] shadow-md"
+    //                     : jar.isFull
+    //                       ? "border-green-400"
+    //                       : "border-gray-200"
+    //                 }`}
+    //               >
+    //                 <div
+    //                   className="absolute bottom-0 left-0 right-0 transition-all duration-1000 ease-out"
+    //                   style={{
+    //                     height: `${jar.filled}%`,
+    //                     background: `linear-gradient(to top, ${color}, ${color}88)`,
+    //                   }}
+    //                 />
+    //                 <div className="absolute top-2 left-1.5 w-0.5 h-16 bg-white/50 rounded-full" />
+    //               </div>
+
+    //               {/* Lid */}
+    //               <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-14 h-3 bg-gray-300 rounded-full border border-gray-200" />
+
+    //               {/* Checkmark */}
+    //               {jar.isFull && (
+    //                 <div className="absolute inset-0 flex items-center justify-center">
+    //                   <svg
+    //                     className="w-8 h-8 text-green-500"
+    //                     fill="currentColor"
+    //                     viewBox="0 0 20 20"
+    //                   >
+    //                     <path
+    //                       fillRule="evenodd"
+    //                       d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+    //                       clipRule="evenodd"
+    //                     />
+    //                   </svg>
+    //                 </div>
+    //               )}
+
+    //               {/* Percentage */}
+    //               {!jar.isFull && (
+    //                 <div className="absolute inset-0 flex items-center justify-center">
+    //                   <span
+    //                     className={`text-sm font-bold ${jar.isActive ? "text-black drop-shadow" : "text-gray-400"}`}
+    //                   >
+    //                     {jar.filled.toFixed(2)}%
+    //                   </span>
+    //                 </div>
+    //               )}
+    //             </div>
+
+    //             {/* Label */}
+    //             <p
+    //               className={`mt-3 text-xs font-medium text-center ${jar.isActive ? "text-[#156082] font-bold" : "text-gray-500"}`}
+    //             >
+    //               {jar.name}
+    //             </p>
+
+    //             <div className="">
+    //               <button className="flex flex-row items-center justify-center w-50 h-10 rounded border border-blue-300 gap-2 shadow-blue-100"
+    //                 onClick={()=>handleDeleteJar(jar.category_id, jar.category_name)}
+    //                 // () => handleDeleteCategory(cat.category_id)
+    //               >
+    //                 {jar.category_name}
+    //                 <Trash size={20} />
+    //               </button>
+    //             </div>
+
+    //             <p className="mt-1 text-xs font-semibold text-gray-700">
+    //               ₹{Math.round((jar.filled / 100) * jar.jar_limit)} / ₹
+    //               {jar.jar_limit}
+    //             </p>
+    //           </div>
+    //         ))}
+
+    //         {/* Extra "Add Jar" slide at the end — same flex row, not a nested wrapper */}
+    //         <div className="w-full flex-shrink-0">
+    //           <AddJarData
+    //             showCreateJar={showCreateJar}
+    //             categoryName={categoryName}
+    //             jarLimit={jarLimit}
+    //             isCreating={isCreating}
+    //             setShowCreateJar={setShowCreateJar}
+    //             SetCategoryName={SetCategoryName}
+    //             setJarLimit={setJarLimit}
+    //             handleCreateJar={handleCreateJar}
+    //           />
+    //         </div>
+    //       </div>
+    //     </div>
+
+    //     {/* Dots */}
+    //     <div className="flex justify-center gap-1.5 mt-4">
+    //       {[jars, { isAddSlide: true }].map((_, i) => (
+    //         <button
+    //           key={i}
+    //           onClick={() => setActiveIndex(i)}
+    //           className={`w-2 h-2 rounded-full transition ${
+    //             i === activeIndex ? "bg-[#156082] scale-110" : "bg-gray-300"
+    //           }`}
+    //         />
+    //       ))}
+    //     </div>
+    //   </div>
+
+    //   <div className="mt-4 pt-4 border-t border-gray-100 text-center">
+    //     <p className="text-xs text-gray-500">Total Saved</p>
+    //     <p className="text-xl font-bold shimmer-text">₹{totalSaved}</p>
+    //   </div>
+    // </section>
   );
 };
 

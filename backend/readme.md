@@ -83,7 +83,7 @@ ALTER COLUMN updated_at SET DEFAULT NOW();
 CREATE TABLE monthly_savings_history (
     history_id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    month DATE NOT NULL,
+    month INTEGER NOT NULL,
     saving NUMERIC(10,2) NOT NULL,
     saved_at TIMESTAMP NOT NULL DEFAULT NOW()
 );   
