@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Trash } from "lucide-react";
-import "./AddIncome.css";
+// import "./AddIncome.css";
 import { useFinance } from "../../context/FinanceContext.jsx";
+import {Link} from 'react-router-dom'
 
-const AddIncome = ({ onBack, user }) => {
+// const AddIncome = ({ onBack, user }) => {
+const AddIncome = ({user }) => {
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -99,7 +101,6 @@ const AddIncome = ({ onBack, user }) => {
       });
       if (res.ok) {
         await refreshTotals();
-        onBack();
       } else {
         alert("Failed to save income");
       }
@@ -117,7 +118,7 @@ const AddIncome = ({ onBack, user }) => {
     <div className="add-transaction">
       {/* Monthly Income Section */}
       <section className="section">
-        <h2 className="section-title income-title">Monthly Income</h2>
+        <h2 className="section-title income-title">Add Monthly Income</h2>
 
         {categories.map((cat) => (
           <div className="field" key={cat.category_id}>
@@ -144,6 +145,7 @@ const AddIncome = ({ onBack, user }) => {
           <input
             type="text"
             placeholder="New category name"
+            sugession
             value={newCategoryName}
             onChange={(e) => setNewCategoryName(e.target.value)}
           />
@@ -155,18 +157,21 @@ const AddIncome = ({ onBack, user }) => {
             {isAdding ? <span className="spinner" /> : "+Add"}
           </button>
         </div>
+         <div className="button-row">
+        <button className="submit-btn" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? <span className="spinner" /> : "Save"}
+        </button>
+        <Link to="/addTransaction">
+          <button className="submit-btn" disbaled={isSaving}>
+          {isSaving ? <span className="spinner" /> : "Back"}
+        </button>
+        </Link>
+      </div>
       </section>
 
       <hr className="divider" />
 
-      <div className="button-row">
-        <button className="submit-btn" onClick={handleSave} disabled={isSaving}>
-          {isSaving ? <span className="spinner" /> : "Save"}
-        </button>
-        <button className="submit-btn" onClick={onBack} disbaled={isSaving}>
-          {isSaving ? <span className="spinner" /> : "Back"}
-        </button>
-      </div>
+     
     </div>
   );
 };

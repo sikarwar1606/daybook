@@ -9,6 +9,7 @@ import Navbar from "../Navbar.jsx"
 import Header from "./Header.jsx";
 import Summary from "./Summary.jsx";
 import {FinanceProvider} from "../../context/FinanceContext.jsx"
+import {Routes, Route} from 'react-router-dom'
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 
@@ -19,8 +20,14 @@ const Home = ({user, handleLogout}) => {
 
   return (
     <FinanceProvider user={user}>
+      <Summary user={user} />
+      <MultiJar user={user} />
+
+      {/* <Routes>
+        <Route path="/" element={<MultiJar user={user} />} />
+      </Routes> */}
       
-    <main className="home-page">
+    {/* <main className="home-page">
       <Header user={user} handleLogout={handleLogout} />
       <Summary user={user} />
 
@@ -28,7 +35,7 @@ const Home = ({user, handleLogout}) => {
       {currentPage === "home" && (<MultiJar user={user} /> )}
       {currentPage === "addTransaction" && <AddTransaction user={user}/>}
       {currentPage === "trending" && <Trending user={user} />}
-    </main>
+    </main> */}
     </FinanceProvider>
   );
 };

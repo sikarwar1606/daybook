@@ -2,8 +2,11 @@ import { useState, useEffect } from "react";
 import { Trash } from 'lucide-react';
 import {useFinance} from "../../context/FinanceContext.jsx"
 import './AddIncome.css'   //We will change this if required in future
+import {Link, useNavigate} from "react-router-dom"
 
-const AddExpences = ({ onBack, user }) => {
+
+const AddExpences = ({user }) => {
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -98,7 +101,6 @@ const AddExpences = ({ onBack, user }) => {
       });
       if (res.ok) {
         await refreshTotals()
-        onBack();
       } else {
         alert("Failed to save expences");
       }
@@ -159,9 +161,11 @@ const AddExpences = ({ onBack, user }) => {
         <button className="submit-btn" onClick={handleSave} disabled={isSaving}>
           {isSaving ? <span className="spinner" /> : "Save"}
         </button>
-        <button className="submit-btn" onClick={onBack} disabled={isAdding || isSaving}>
+       <Link to="/addTransaction">
+         <button className="submit-btn"  disabled={isAdding || isSaving}>
           Back
         </button>
+       </Link>
       </div>
     </div>
   );

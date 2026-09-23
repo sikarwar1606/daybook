@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useFinance } from "../../context/FinanceContext";
 import "./Summary.css";
+import { useNavigate } from "react-router-dom";
+
 
 const Summary = ({ user }) => {
   const { income, expenses, loading } = useFinance();
   const balance = income - expenses;
   const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
+  const navigate = useNavigate();
 
   const now = new Date();
   const date = `${now.getMonth() + 1}${now.getFullYear()}`;
@@ -39,36 +42,13 @@ const Summary = ({ user }) => {
   }
 
   return (
-    // <div className="summary">
-    //   <div className="summary-row">
-    //     <span className="summary-label">Income</span>
-    //     <span className="summary-value income">{formatCurrency(income)}</span>
-    //   </div>
-    //   <div className="summary-row">
-    //     <span className="summary-label">Expenses</span>
-    //     <span className="summary-value expense">
-    //       {formatCurrency(expenses)}
-    //     </span>
-    //   </div>
-    //   <div className="summary-divider" />
-    //   <div className="summary-row balance-row">
-    //     <span className="summary-label">Monthly Saving</span>
-    //     <span
-    //       className={`summary-value balance ${balance < 0 ? "negative" : ""}`}
-    //     >
-    //       {formatCurrency(balance)}
-    //     </span>
-    //   </div>
-    // </div>
-    <div className="summary">
+    <div className="summary" onClick={()=> navigate("/addTransaction")} >
       <div className="summary-row">
         <span className="summary-label">Income</span>
         <span className="summary-label">Expenses</span>
         <span className="summary-label">Balance</span>
-        
       </div>
       <div className="summary-row">
-        
         <span className="summary-value income">{formatCurrency(income)}</span>
         <span className="summary-value expense">
           {formatCurrency(expenses)}
