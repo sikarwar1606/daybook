@@ -9,6 +9,7 @@ import AddTransaction from "./component/AddData/AddTransaction.jsx"
 import Trending from "./component/AddData/Trending.jsx"
 import AddIncome from "./component/AddData/AddIncome.jsx"
 import AddExpences from "./component/AddData/AddExpences.jsx"
+import Error from "./Error.jsx"
 
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL;
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_REACT_APP_GOOGLE_CLIENT_ID;
@@ -127,6 +128,7 @@ export default function App() {
             path="/trending"
             element={<Trending user={user} />}
           />
+          <Route path="*" element={<Error />} />
 
 
         </Routes>

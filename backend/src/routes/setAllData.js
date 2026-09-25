@@ -21,6 +21,7 @@ router.post('/setData/savings', async (req, res) => {
              DO UPDATE SET
                saving = EXCLUDED.saving,
                updated_at = NOW()
+             WHERE monthly_savings != EXCLUDED.saving,
              RETURNING *`,
             [user_id, month, saving]
         );
